@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"allowJs": true,
+		"checkJs": true,
+		"noEmit": true,
+		"strict": true,
+		"target": "ESNext",
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"lib": ["DOM", "DOM.Iterable", "ESNext"],
+		"types": ["vite/client"]
+	},
+	"include": ["src/**/*.js", "types/**/*.d.ts"],
+	"exclude": ["node_modules", "out", "src/dev-dist/**/*", "dist"]
+}

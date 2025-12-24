@@ -8,13 +8,17 @@ export const createMessageElement = () => {
 	messageBox.appendChild(messageText);
 
 	const body = document.querySelector('body');
-	body.appendChild(messageBox);
+	body?.appendChild(messageBox);
 
 	setTimeout(() => messageBox.classList.add('message-box--animate'), 100);
 
 	return messageBox;
 };
 
+/**
+ * @param {HTMLElement} messageEl
+ * @returns {void}
+ */
 export const removeMessageElement = (messageEl) => {
 	setTimeout(() => {
 		messageEl.classList.remove('message-box--animate');

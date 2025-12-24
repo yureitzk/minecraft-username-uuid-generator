@@ -2,8 +2,18 @@ import pLimit from 'p-limit';
 import { getUUID } from './api.js';
 import createUUID from './uuid.js';
 
+/**
+ * @typedef {import('../types/global').MappingResult} MappingResult
+ * @typedef {import('../types/global').UUIDMapping} UUIDMapping
+ */
+
+/**
+ * @param {string[]} usernames
+ * @returns {Promise<MappingResult>}
+ */
 export async function generateOnlineMappings(usernames) {
 	const limit = pLimit(10);
+	/** @type {UUIDMapping[]} */
 	const mappings = [];
 
 	const promises = usernames.map((username) =>
@@ -16,7 +26,12 @@ export async function generateOnlineMappings(usernames) {
 	return { promises, mappings };
 }
 
+/**
+ * @param {string[]} usernames
+ * @returns {MappingResult}
+ */
 export function generateOfflineMappings(usernames) {
+	/** @type {UUIDMapping[]} */
 	const mappings = [];
 	const promises = usernames.map((username) => {
 		try {

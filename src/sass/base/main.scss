@@ -49,9 +49,9 @@
 	right: 0;
 	margin-inline: auto;
 	transform: translateY(-50%);
-	--g1: conic-gradient(from  90deg at 3px  3px ,#0000 90deg,#{config.$accent} 0);
-	--g2: conic-gradient(from -90deg at 22px 22px,#0000 90deg,#{config.$accent} 0);
-	background:var(--g1),var(--g1),var(--g1), var(--g2),var(--g2),var(--g2);
+	--g1: conic-gradient(from 90deg at 3px 3px, #0000 90deg, #{config.$accent} 0);
+	--g2: conic-gradient(from -90deg at 22px 22px, #0000 90deg, #{config.$accent} 0);
+	background: var(--g1), var(--g1), var(--g1), var(--g2), var(--g2), var(--g2);
 	background-size: 1.6rem 1.6rem;
 	aspect-ratio: 1;
 	background-repeat: no-repeat;

@@ -17,15 +17,28 @@ import { createMessageElement, removeMessageElement } from './js/message.js';
 
 const highlightWorker = new Worker(new URL('./js/highlightWorker.js', import.meta.url), { type: 'module' });
 
+/**
+ * @typedef {import('./types/global').Elements} Elements
+ * @typedef {import('./types/global').ExportFormat} ExportFormat
+ * @typedef {import('./types/global').ImportType} ImportType
+ */
+
 class UUIDGenerator {
 	constructor() {
+		/** @type {Elements} */
 		this.elements = this.initializeElements();
 		this.setupWorker();
+		/** @type {string[]} */
 		this.usernames = [];
+		/** @type {ImportType | ''} */
 		this.type = '';
+		/** @type {Map<string, string>} */
 		this.cachedMappings = new Map();
 	}
 
+	/**
+	 * @returns {Elements}
+	 */
 	initializeElements() {
 		return {
 			generateButton: document.querySelector('.form__button'),
@@ -52,42 +65,68 @@ class UUIDGenerator {
 		};
 	}
 
+	/**
+	 * @returns {ExportFormat}
+	 */
 	getExportFormat() {
-		return this.elements.outputFormatGroup?.querySelector('input[name="export"]:checked')?.value || 'json';
+		const checked = /** @type {HTMLInputElement | null} */ (this.elements.outputFormatGroup?.querySelector('input[name="export"]:checked'));
+		return /** @type {ExportFormat} */ (checked?.value || 'json');
 	}
 
+	/**
+	 * @returns {ImportType}
+	 */
 	getImportType() {
-		return this.elements.inputTypeGroup?.querySelector('input[name="import"]:checked')?.value || 'online';
+		const checked = /** @type {HTMLInputElement | null} */ (this.elements.inputTypeGroup?.querySelector('input[name="import"]:checked'));
+		return /** @type {ImportType} */ (checked?.value || 'online');
 	}
 
+	/**
+	 * @returns {string[]}
+	 */
 	getUsernames() {
-		return this.elements.input.value
+		return (this.elements.input?.value || '')
 			.split('\n')
 			.map((username) => username.trim())
 			.filter((username) => username.length > 0);
 	}
 
+	/**
+	 * @param {boolean} show
+	 */
 	toggleLoader(show) {
 		const action = show ? 'add' : 'remove';
 		this.elements.resultWrapper?.classList[action]('form__result-wrapper--loading');
 		this.elements.loader?.classList[action]('loading--visible');
 	}
 
+	/**
+	 * @param {boolean} highlight
+	 */
 	toggleInputHighlight(highlight) {
 		const action = highlight ? 'add' : 'remove';
 		this.elements.input?.classList[action]('form__input--highlight');
 	}
 
+	/**
+	 * @param {string} code
+	 * @param {string} language
+	 */
 	displayHighlightedCode(code, language) {
 		highlightWorker.postMessage({ code, language });
 	}
 
+	/**
+	 * @param {string} highlightedCode
+	 */
 	updateResultDisplay(highlightedCode) {
+		if (!this.elements.result) return;
+
 		const isJson = this.getExportFormat() === 'json';
 		this.elements.result.innerHTML = highlightedCode;
-		this.elements.result?.classList.add('hljs');
-		this.elements.result?.classList.toggle('language-json', isJson);
-		this.elements.result?.classList.toggle('language-uuid-pairs', !isJson);
+		this.elements.result.classList.add('hljs');
+		this.elements.result.classList.toggle('language-json', isJson);
+		this.elements.result.classList.toggle('language-uuid-pairs', !isJson);
 	}
 
 	showErrorMessage() {
@@ -95,6 +134,9 @@ class UUIDGenerator {
 		removeMessageElement(messageBox);
 	}
 
+	/**
+	 * @returns {Promise<void>}
+	 */
 	async generatePairs() {
 		const usernames = this.getUsernames();
 		if (usernames.length === 0) return;
@@ -113,6 +155,9 @@ class UUIDGenerator {
 		}
 	}
 
+	/**
+	 * @param {ExportFormat} format
+	 */
 	renderMappings(format) {
 		const formattedPairs = Array.from(this.cachedMappings.entries()).map(([username, uuid]) => formatPair(username, uuid, format));
 		const code = formatOutputCode(formattedPairs, format);
@@ -120,6 +165,11 @@ class UUIDGenerator {
 		this.displayHighlightedCode(code, language);
 	}
 
+	/**
+	 * @param {string[]} usernames
+	 * @param {ImportType} type
+	 * @returns {Promise<void>}
+	 */
 	async fetchMappings(usernames, type) {
 		this.usernames = usernames;
 		this.type = type;
@@ -127,7 +177,7 @@ class UUIDGenerator {
 
 		if (isOnline) this.toggleLoader(true);
 
-		const result = isOnline ? await generateOnlineMappings(this.usernames) : await generateOfflineMappings(this.usernames);
+		const result = isOnline ? await generateOnlineMappings(this.usernames) : generateOfflineMappings(this.usernames);
 
 		const settled = await Promise.allSettled(result.promises);
 		const hasErrors = settled.some((r) => r.status === 'rejected');
@@ -147,7 +197,13 @@ class UUIDGenerator {
 		});
 	}
 
+	/**
+	 * @param {File} file
+	 * @returns {Promise<void>}
+	 */
 	async updateInputFromFile(file) {
+		if (!this.elements.input) return;
+
 		const text = await file.text();
 		const currentValue = this.elements.input.value;
 		const existing = new Set(this.getUsernames());
@@ -161,6 +217,10 @@ class UUIDGenerator {
 		}
 	}
 
+	/**
+	 * @param {FileList} files
+	 * @returns {Promise<void>}
+	 */
 	async handleFileUpload(files) {
 		await handleTextFiles(files, (file) => this.updateInputFromFile(file));
 		await this.generatePairs();
@@ -185,13 +245,18 @@ class UUIDGenerator {
 		});
 
 		this.elements.copyButton?.addEventListener('click', () => {
-			copyTextFromInput(this.elements.result, this.elements.copyButtonIcon);
+			if (this.elements.result && this.elements.copyButtonIcon) {
+				copyTextFromInput(this.elements.result, this.elements.copyButtonIcon);
+			}
 		});
 
 		this.elements.downloadButton?.addEventListener('click', () => this.handleDownload());
 
 		this.elements.fileInput?.addEventListener('change', async (e) => {
-			await this.handleFileUpload(e.target.files);
+			const target = /** @type {HTMLInputElement} */ (e.target);
+			if (target?.files) {
+				await this.handleFileUpload(target.files);
+			}
 		});
 
 		['dragenter', 'dragover'].forEach((eventType) => {

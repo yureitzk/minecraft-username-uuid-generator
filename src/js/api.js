@@ -1,3 +1,8 @@
+/**
+ * @param {string} username
+ * @returns {Promise<string>}
+ * @throws {Error}
+ */
 export async function getUUID(username) {
 	try {
 		const response = await fetch(`https://api.ashcon.app/mojang/v2/uuid/${username}`);
@@ -8,6 +13,6 @@ export async function getUUID(username) {
 			throw new Error('Error acces api.ashcon.app');
 		}
 	} catch (error) {
-		throw new Error(error);
+		throw new Error(error instanceof Error ? error.message : String(error));
 	}
 }
