@@ -1,0 +1,23 @@
+@use '../base/config';
+
+.header {
+	background-color: var(--color-header-background);
+	margin-bottom: 35px;
+	border-bottom: 5px solid var(--color-header-inner-border);
+	outline: 2px solid config.$black;
+	font-family: config.$minecraftten;
+
+	&__title {
+		color: var(--color-text);
+		margin: 0 auto;
+		font-size: 1.5em;
+		justify-self: center;
+		text-align: center;
+		font-weight: normal;
+	}
+
+	&__wrapper {
+		flex-grow: 1;
+		flex-basis: 0;
+	}
+}

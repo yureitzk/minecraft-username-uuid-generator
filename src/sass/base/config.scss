@@ -1,0 +1,105 @@
+$white: #ffffff;
+$silver: #c6c6c6;
+$black: #000000;
+$gray: #8b8b8b;
+$cardinal: #a71734;
+$darkgray: #303332;
+$lightgray: #6a6c70;
+$blackLight: #1e1e1f;
+$dimgrey: #58585a;
+$kangaroo: #c3c5ba;
+$shuttlegray: #696b73;
+$accent: #53a338;
+$capecod: #404243;
+$transparentwhite: rgba(255, 255, 255, 0.45);
+$ghost: #c5cad9;
+$corn: #e7ce00;
+$forestgreen: #3b8526;
+$darkslategray: #2a4e20;
+$codgray: #171615;
+$mineshaft: #393939;
+$darkmineshaft: #3b3b3b;
+$textcolor: #333;
+$edward: #adaeae;
+$fontsize: 18; // Body Font Size
+$lineheight: 1.65; // Document Line Height
+$systemfont: -apple-system, blinkmacsystemfont, arial, sans-serif; // System Font Family
+$userfont: minecraft, $systemfont; // User Font Family
+$minecraftten: minecraft-ten, $systemfont; // User Font Family
+
+// IMPORT SECTION
+@use 'sass:meta';
+@use 'sass:math';
+
+:root[color-mode='light'] {
+	@include meta.load-css('~highlight.js/styles/magula');
+}
+:root[color-mode='dark'] {
+	@include meta.load-css('~highlight.js/styles/atom-one-dark');
+}
+
+// FONTS LOAD SECTION
+
+@mixin font-face($font-family, $url, $weight, $style) {
+	@font-face {
+		src: url($url) format('woff2');
+		font-family: '#{$font-family}';
+		font-weight: #{$weight};
+		font-style: $style;
+		font-display: swap;
+	}
+}
+
+@mixin interactive-states {
+	&:hover,
+	&:focus-visible,
+	&:active {
+		@content;
+	}
+
+	@supports not selector(:focus-visible) {
+		&:focus {
+			@content;
+		}
+	}
+}
+
+@function toRem($pxval, $base: 16) {
+	@if not math.is-unitless($pxval) {
+		$pxval: strip-units($pxval);
+	}
+	@if not math.is-unitless($base) {
+		$base: strip-units($base);
+	}
+	@return calc(($pxval / $base) * 1rem);
+}
+
+@include font-face('minecraft', '/fonts/Minecraft-Regular.woff2', 400, normal);
+@include font-face('minecraft-ten', '/fonts/Minecraft-Ten.woff2', 400, normal);
+// GENERAL CSS SETTINGS
+
+::placeholder,
+:empty:not(:focus):before {
+	color: var(--color-placeholder);
+}
+
+::selection {
+	color: $white;
+	background-color: $accent;
+}
+
+textarea:focus,
+input:focus,
+*:focus {
+	outline: none;
+}
+
+body {
+	position: relative;
+	overflow-x: hidden;
+	min-width: 320px;
+	font-family: $userfont;
+	font-size: toRem($fontsize);
+	line-height: $lineheight;
+	color: $textcolor;
+}

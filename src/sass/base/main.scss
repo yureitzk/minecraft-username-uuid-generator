@@ -1,0 +1,182 @@
+@use 'config';
+
+.list-reset {
+	margin: 0;
+	padding-left: 0;
+	list-style-type: none;
+}
+
+@keyframes spin {
+	0% {
+		background-position:
+			0 0,
+			0 100%,
+			100% 100%;
+	}
+	25% {
+		background-position:
+			100% 0,
+			0 100%,
+			100% 100%;
+	}
+	50% {
+		background-position:
+			100% 0,
+			0 0,
+			100% 100%;
+	}
+	75% {
+		background-position:
+			100% 0,
+			0 0,
+			0 100%;
+	}
+	100% {
+		background-position:
+			100% 100%,
+			0 0,
+			0 100%;
+	}
+}
+
+.loading {
+	display: none;
+	width: 4rem;
+	height: 4rem;
+	position: absolute;
+	top: 50%;
+	left: 0;
+	right: 0;
+	margin-inline: auto;
+	transform: translateY(-50%);
+	--g1: conic-gradient(from  90deg at 3px  3px ,#0000 90deg,#{config.$accent} 0);
+	--g2: conic-gradient(from -90deg at 22px 22px,#0000 90deg,#{config.$accent} 0);
+	background:var(--g1),var(--g1),var(--g1), var(--g2),var(--g2),var(--g2);
+	background-size: 1.6rem 1.6rem;
+	aspect-ratio: 1;
+	background-repeat: no-repeat;
+	animation: spin 1.25s infinite;
+	z-index: 1;
+
+	&--visible {
+		display: block;
+	}
+}
+
+.color-mode-button {
+	background: none;
+	border: none;
+	margin: 0 0 0 auto;
+	padding: 0;
+	width: 30px;
+	height: 30px;
+	display: block;
+	cursor: pointer;
+	color: var(--color-text);
+	transition: color 0.25s ease;
+
+	&__icon {
+		max-width: 100%;
+		max-height: 100%;
+	}
+
+	@include config.interactive-states {
+		& {
+			color: config.$corn;
+		}
+	}
+
+	&--dark {
+		@include config.interactive-states {
+			& {
+				color: config.$ghost;
+			}
+		}
+	}
+}
+
+.message-box {
+	position: fixed;
+	top: 100vh;
+	left: 0;
+	right: 0;
+	margin-inline: auto;
+	display: block;
+	width: fit-content;
+	max-width: 90%;
+	padding: 3px 8px;
+	background-color: config.$cardinal;
+	z-index: 2;
+	box-sizing: border-box;
+	transform: translateY(0);
+	transition: 0.5s transform;
+
+	&--animate {
+		transform: translateY(calc(-20vh - 16px));
+	}
+
+	&__text {
+		text-align: center;
+		color: config.$white;
+		margin: 0;
+	}
+}
+
+.border-wrapper {
+	border: 2px solid var(--color-input-border);
+
+	&--form {
+		border: 3px solid config.$blackLight;
+	}
+
+	&--actions {
+		border-bottom: none;
+		display: flex;
+		border-color: config.$lightgray;
+	}
+}
+
+/* Any element with the class "light--hidden" will be hidden when the site is set to Light Mode */
+:root[color-mode='light'] .light--hidden {
+	display: none;
+}
+
+/* Any element with the class "dark--hidden" will be hidden when the site is set to Dark Mode */
+:root[color-mode='dark'] .dark--hidden {
+	display: none;
+}
+
+:root[color-mode='dark'] {
+	--color-page-background: linear-gradient(rgb(38 36 35), rgb(0 0 0 / 85%)) center top / cover fixed;
+	--color-text: #{config.$white};
+	--color-input-background: #{config.$darkmineshaft};
+	--color-header-background: #{config.$mineshaft};
+	--color-input-text: #{config.$silver};
+	--color-input-border: #{config.$black};
+	--color-form-background: #{config.$capecod};
+	--color-header-inner-border: #{config.$blackLight};
+	--color-label: #{config.$white};
+	--color-icon: #{config.$white};
+	--color-social: #{config.$white};
+	--color-placeholder: #{config.$kangaroo};
+}
+
+:root[color-mode='light'] {
+	--color-page-background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.333)) center top / cover fixed;
+	--color-text: #{config.$black};
+	--color-input-background: #{config.$edward};
+	--color-header-background: #{config.$white};
+	--color-input-text: #{config.$black};
+	--color-input-border: #{config.$black};
+	--color-form-background: #{config.$silver};
+	--color-header-inner-border: #{config.$silver};
+	--color-label: #{config.$textcolor};
+	--color-icon: #{config.$white};
+	--color-social: #{config.$codgray};
+	--color-placeholder: #{config.$shuttlegray};
+}
+
+body {
+	background: var(--color-page-background);
+	color: var(--color-text);
+}

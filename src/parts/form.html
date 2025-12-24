@@ -1,0 +1,105 @@
+<form class="form" action="/">
+	<div class="container">
+		<div class="border-wrapper border-wrapper--form">
+			<div class="form__inner-wrapper">
+				<label class="form__label" for="input">Usernames</label>
+
+				<div class="form__radio-group form__radio-group--input">
+					<div>
+						<div class="form__option">
+							<input type="radio" class="form__radio" id="offline" name="import" value="offline" required="" checked="" />
+							<label for="offline">Offline</label>
+						</div>
+
+						<div class="form__option">
+							<input type="radio" class="form__radio" id="online" name="import" value="online" required="" />
+							<label for="online">Online</label>
+						</div>
+					</div>
+
+					<div class="form__actions">
+						<div class="border-wrapper border-wrapper--actions">
+							<div class="form__action-wrapper">
+								<input
+									type="file"
+									multiple
+									accept="*.txt,text/*"
+									aria-label="Upload a list of usernames"
+									class="form__uploader"
+									id="form__uploader"
+								/>
+								<label title="Upload list of usernames" for="form__uploader" class="form-button">
+									<svg class="form-button__icon form-button__icon--upload">
+										<use xlink:href="/img/sprite.svg#upload"></use>
+									</svg>
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="form__textarea-wrapper">
+					<textarea class="form__input" id="input" name="input" placeholder="Notch &#10;jeb_" spellcheck="false" rows="4"></textarea>
+				</div>
+
+				<div class="form__button-wrapper">
+					<button class="form__button" type="button">Generate</button>
+				</div>
+				<div>
+					<label class="form__label">Result</label>
+				</div>
+
+				<div class="form__radio-group form__radio-group--output">
+					<div>
+						<div class="form__option">
+							<input type="radio" class="form__radio" id="text" name="export" value="txt" required="" checked="" />
+							<label for="text">Plain Text</label>
+						</div>
+
+						<div class="form__option">
+							<input type="radio" class="form__radio" id="json" name="export" value="json" required="" />
+							<label for="json">JSON</label>
+						</div>
+					</div>
+
+					<div class="form__actions">
+						<div class="border-wrapper border-wrapper--actions">
+							<div class="form__action-wrapper">
+								<button
+									title="Copy generated UUIDs to clipboard"
+									aria-label="Copy to clipboard generated UUIDs"
+									type="button"
+									class="form-button form-button--copy"
+								>
+									<svg class="form-button__icon form-button__icon--copy">
+										<use xlink:href="/img/sprite.svg#clipboard"></use>
+									</svg>
+								</button>
+							</div>
+							<div class="form__action-wrapper">
+								<button
+									title="Download generated UUIDs"
+									aria-label="Download generated UUIDs"
+									type="button"
+									class="form-button form-button--download"
+								>
+									<svg class="form-button__icon form-button__icon--download">
+										<use xlink:href="/img/sprite.svg#download"></use>
+									</svg>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div id="result" class="form__result-wrapper">
+					<div class="loading"></div>
+
+					<pre class="form__result" spellcheck="false">
+						<code data-message="Generated UUIDs will appear here" class="form__code language-uuid-pairs"></code>
+					</pre>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>
