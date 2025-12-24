@@ -62,7 +62,8 @@ export default defineConfig({
 				theme_color: '#c6c6c6',
 				background_color: '#c7c7c7',
 				display: 'standalone',
-				start_url: '/',
+				start_url: '.',
+				scope: '.',
 				description: pkg.description,
 				orientation: 'any',
 				icons: [
