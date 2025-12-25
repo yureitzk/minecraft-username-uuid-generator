@@ -1,6 +1,6 @@
 # Minecraft Username UUID Generator
 
-[Live version](https://yureitzk.github.io/minecraft-username-uuid-generator)
+[Live website](https://yureitzk.github.io/minecraft-username-uuid-generator)
 
 ## Features
 
